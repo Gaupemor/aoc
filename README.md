@@ -6,3 +6,10 @@
 ```bash
 $ python first.py
 ```
+
+### Day 2
+1: OK (3931283)  
+2: OK (6979)  
+```bash
+$ python prog.py
+```
