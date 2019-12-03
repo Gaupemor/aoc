@@ -1,96 +1,85 @@
 import numpy as np
 import sys
+import time
 
 """
 Day 3 - Puzzle 1 & 2
 https://adventofcode.com/2019/day/3
 """
 
-def path_directions():
-    with open("input.txt", "r") as f:
-        def wire_path_array(delimited_string):
-            str_path = np.array(delimited_string.split(","))
-            return np.array([(path[0], int(path[1:])) for path in str_path])
-
-        return wire_path_array(f.readline().strip("\n")), wire_path_array(f.readline().strip("\n"))
-
 # assuming the central port is located in position (0, 0)
-def path_coordinates(path):
-    complete_path = list()
-    current_pos = np.array([0, 0])
-    go_direction = None
 
-    def go_left():
-        current_pos[1] -= 1
-        complete_path.append(np.copy(current_pos))
-    def go_right():
-        current_pos[1] += 1
-        complete_path.append(np.copy(current_pos))
-    def go_up():
-        current_pos[0] -= 1
-        complete_path.append(np.copy(current_pos))
-    def go_down():
-        current_pos[0] += 1
-        complete_path.append(np.copy(current_pos))
+# Calculate paths and intersections
+def calculate():
+    with open("input.txt", "r") as f:
+        def generate_path_array(delimited_string):
+            path = list()
 
-    for direction, steps in path:
-        if direction == 'R':
-            go_direction = go_right
-        if direction == 'L':
-            go_direction = go_left
-        if direction == 'U':
-            go_direction = go_up
-        if direction == 'D':
-            go_direction = go_down
+            directional_path = np.array([(p[0], int(p[1:])) for p in np.array(delimited_string.split(","))])
+            current_pos = np.array([0, 0])
 
-        for i in range(int(steps)):
-            go_direction()
+            def go_left():
+                current_pos[1] -= 1
+                path.append(np.copy(current_pos))
+            def go_right():
+                current_pos[1] += 1
+                path.append(np.copy(current_pos))
+            def go_up():
+                current_pos[0] -= 1
+                path.append(np.copy(current_pos))
+            def go_down():
+                current_pos[0] += 1
+                path.append(np.copy(current_pos))
 
-    return np.array(complete_path)
+            for direction, steps in directional_path:
+                go_direction = None
 
-wire_1, wire_2 = path_directions()
-complete_path_1 = path_coordinates(wire_1)
-complete_path_2 = path_coordinates(wire_2)
+                if direction == 'R':
+                    go_direction = go_right
+                if direction == 'L':
+                    go_direction = go_left
+                if direction == 'U':
+                    go_direction = go_up
+                if direction == 'D':
+                    go_direction = go_down
 
-intersections = np.array(
-    [x for x in
-    set([tuple(x) for x in complete_path_1])
-    & set([tuple(x) for x in complete_path_2])]
-    )
+                for i in range(int(steps)):
+                    go_direction()
 
+            return np.array(path)
+
+        def calculate_intersections(p_1, p_2):
+            return np.array(
+                [x for x in
+                set([tuple(x) for x in p_1])
+                & set([tuple(x) for x in p_2])]
+                )
+
+        path_1 = generate_path_array(f.readline().strip("\n"))
+        path_2 = generate_path_array(f.readline().strip("\n"))
+        calculated_intersections = calculate_intersections(path_1, path_2)
+
+        return path_1, path_2, calculated_intersections
+
+path_1, path_2, intersections = calculate()
+
+# 1: Distance to nearest intersection
 def manhattan_distance():
     closest_intersection = sys.maxsize
     for i in intersections:
         path_length = abs(i[0]) + abs(i[1])
-        #print(path_length)
         if path_length < closest_intersection:
             closest_intersection = path_length
     return closest_intersection
 
+# 2: Shortest joined path to intersections
 def shortest_joined_path():
     shortest_joined_path = sys.maxsize
     for i in intersections:
-        
-        # make nicer? vvvvvvv
-        a = b = 0
-        index = 1
-        for c_1 in complete_path_1:
-            if np.array_equal(i, c_1):
-                a = index
-                break
-            index += 1
-        index = 1
-        for c_2 in complete_path_2:
-            if np.array_equal(i, c_2):
-                b = index
-                break
-            index += 1
-        # ^^^^^^^^^^^^
+        i_1 = path_1.tolist().index(i.tolist())
+        i_2 = path_2.tolist().index(i.tolist())
 
-        if a == b == 0:
-            raise Exception("Could not located a listed intersection.")
-        joined_path = a + b
-        #print(f"{i}: {a} + {b} = {joined_path}")
+        joined_path = i_1 + i_2
         if joined_path < shortest_joined_path:
             shortest_joined_path = joined_path
 
