@@ -15,8 +15,8 @@ $ python prog.py
 ```
 
 ### Day 3
-1: OK (466)
-2: OK (9006)
+1: OK (466)  
+2: OK (9006)  
 ```bash
 $ python prog.py
 ```
