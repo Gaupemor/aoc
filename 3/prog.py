@@ -1,6 +1,5 @@
 import numpy as np
 import sys
-import time
 
 """
 Day 3 - Puzzle 1 & 2
@@ -76,8 +75,8 @@ def manhattan_distance():
 def shortest_joined_path():
     shortest_joined_path = sys.maxsize
     for i in intersections:
-        i_1 = path_1.tolist().index(i.tolist())
-        i_2 = path_2.tolist().index(i.tolist())
+        i_1 = path_1.tolist().index(i.tolist()) + 1
+        i_2 = path_2.tolist().index(i.tolist()) + 1
 
         joined_path = i_1 + i_2
         if joined_path < shortest_joined_path:
