@@ -20,3 +20,10 @@ $ python prog.py
 ```bash
 $ python prog.py
 ```
+
+### Day 4
+1: OK (1748)  
+2: OK (1180)  
+```bash
+$ python prog.py
+```
