@@ -27,3 +27,12 @@ $ python prog.py
 ```bash
 $ python prog.py
 ```
+
+### Day 5
+1: OK (16225258)  
+2: OK (2808771)  
+```bash
+$ python prog.py
+```
+Made changes to day 2 file containing the Intcode computer.  
+Day 5 prog imports the Day 2 prog.  
